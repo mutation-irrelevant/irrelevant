@@ -1,0 +1,12 @@
+<project>
+    <dirname property="icov.home" file="${ant.file}" />
+    <property name="d4j.home" value="${icov.home}/defects4j" />
+
+    <import file="${d4j.home}/framework/projects/defects4j.build.xml"/>
+
+    <target name="classpath" depends="compile">
+        <echo message="${classes.dir}" />
+        <pathconvert property="classpath" refid="d4j.test.classpath" />
+        <echo message="${classpath}" />
+    </target>
+</project>
