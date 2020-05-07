@@ -5,3 +5,4 @@ changes
 cov
 mutations
 defects4j/**/*
+.idea

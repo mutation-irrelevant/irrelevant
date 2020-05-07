@@ -77,7 +77,7 @@ class TestSuite:
         self.bug_id = bug_id
         self.suite_type = suite_type
         self.suite_name = suite_name
-        self.suite_root = suite_root = os.path.join("mutations", proj_name, bug_id)
+        self.suite_root = suite_root = os.path.join("suites", proj_name, bug_id)
         self.suite_path = None
         self._triggers = None
         self._changes = None
