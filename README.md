@@ -1,8 +1,8 @@
 # Overview
-This repository aims to share the scripts used to conduct the study for "Investigating the correlation between mutation score and fault detection with irrelevant mutants"
+This repository aims to share the scripts used to conduct the study for "Investigating the correlation between mutants and faults with respect to mutated code"
 
 # Requirements
-- == Oracle JDK 1.7
+- == Oracle JDK 1.8
 - \>= python 3.6
 
 # Usage
@@ -11,26 +11,17 @@ This repository aims to share the scripts used to conduct the study for "Investi
 pip install -r requirements.txt
 ```
 
-## Initialize defects4j
+## Extract experimental data
 ```
-git submodule init
-git submodule update
-cd defects4j
-cpanm --installdeps .
-./init.sh
+tar bz suites.tar.bz2 # generated using testsuitegenerator.py, killmap.py, and pit.py
+tar bz changes.tar.bz2 # generated using patch.py
+tar bz cov.tar.bz2 # generated using correlation.py and corr_pit.py
 ```
 
-## Generate test suites
+## Analyze data using jupyter
 ```
-python testsuitegenerator.py
-```
-
-## Generate testcase-mutants kill matrix
-```
-python killmap.py
+jupyter lab
 ```
 
-### Compute mutation scores
-```
-python correlation.py
-```
+# TODO
+- generalize and refine script

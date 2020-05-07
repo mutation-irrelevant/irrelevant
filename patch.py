@@ -98,7 +98,7 @@ def _parse_ant_echo(line):
 def _get_classes_path(git_home):
     cwd = os.getcwd()
     ant_bin = os.path.join(cwd, "defects4j/major/bin/ant")
-    build_xml = os.path.join(cwd, "classpath.build.xml")
+    build_xml = os.path.join(cwd, "build.xml")
     try:
         ant = subprocess.run([ant_bin, "-f", build_xml, "-Dbasedir={}".format(git_home), "classpath"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=git_home)
     except subprocess.CalledProcessError as e:

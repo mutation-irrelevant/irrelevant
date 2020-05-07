@@ -26,7 +26,7 @@ class Killmap(AbstractContextManager):
     TIMEOUT = "timeout"
     ERROR = "error"
     UNKNOWN = "unknown"
-    ROOT_DIR = "mutations"
+    ROOT_DIR = "suites"
 
 
     def __str__(self):
@@ -370,10 +370,9 @@ def _generate_map(args):
         for idx, km in enumerate(killmaps):
             snapshot = km.snapshot()
             print(multiprocessing.current_process(), ":", datetime.now(),":", km)
-            if idx == 0:
-                _analyze(git_home, km, snapshot[Killmap.ERROR], timeout)
-
+            _analyze(git_home, km, snapshot[Killmap.ERROR], timeout)
             _analyze(git_home, km, snapshot[Killmap.UNKNOWN], timeout)
+            _analyze(git_home, km, snapshot[Killmap.TIMEOUT], timeout)
             
 
 def _hastask(suites):
@@ -387,14 +386,7 @@ def _hastask(suites):
         km = Killmap(suite)
 
         snapshot = km.snapshot()
-        if len(snapshot[Killmap.TIMEOUT]) > 0:
-            failed = True
-            break
-
-        if idx == 0:
-            cnt += len(snapshot[Killmap.UNKNOWN]) + len(snapshot[Killmap.ERROR])
-        else:
-            cnt += len(snapshot[Killmap.UNKNOWN])
+        cnt += len(snapshot[Killmap.UNKNOWN]) + len(snapshot[Killmap.ERROR]) +  + len(snapshot[Killmap.TIMEOUT])
         killmaps.append(km)
 
     if cnt == 0:

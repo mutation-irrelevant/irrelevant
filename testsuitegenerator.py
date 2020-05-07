@@ -55,6 +55,7 @@ class SuiteGenerator:
             try:
                 self._generate(proj_name, bug_id, fh)
             except (CalledProcessError, TimeoutExpired) as e:
+                print(e)
                 print("generate() causes an exception - ", type(e))
 
                 fh.seek(0)
@@ -133,9 +134,21 @@ class RandoopGenerator(SuiteGenerator):
         return "{}.{}.1.log".format(proj_name, bug_id)
 
 
+from testsuite import DevTestSuite, RanSuite
+def _generate(proj_name, bug_id, suite_type):
+    if "evosuite" in suite_type:
+        suite_type = suite_type[9:]
+        EvoSuiteGenerator(suite_type).generate(EvoSuite(proj_name, bug_id, suite_type))
+    elif suite_type == "randoop":
+        RandoopGenerator().generate(RanSuite(proj_name, bug_id))
+    elif suite_type == "dev":
+        generate_devsuite(DevTestSuite(proj_name, bug_id))
+
+
 def _main():
     import sys
     import locale
+    import multiprocessing
     
     loc = locale.getdefaultlocale()[1]
     if loc != "UTF-8":
@@ -145,10 +158,17 @@ def _main():
     generators["randoop"] = RandoopGenerator().generate
     generators["dev"] = generate_devsuite
 
+    tasks = []
     for proj_name in ["Math", "Chart", "Lang", "Time", "Closure"]:
-        for suite in (suite for suites in iterate_suites(proj_name) for suite in suites):
-            print("Next:", suite)
-            generators[suite.suite_type](suite)
+        for suites in iterate_suites(proj_name):
+            for s in suites:
+                if not s.is_suite_available():
+                    with open(os.path.join("mutations", proj_name, s.bug_id, "no_" + s.suite_type), "w"):
+                        pass
+                    tasks.append([s.proj_name, s.bug_id, s.suite_type])
+
+    with multiprocessing.Pool(7) as pool:
+        pool.starmap(_generate, tasks)
 
 
 if __name__ == "__main__":
