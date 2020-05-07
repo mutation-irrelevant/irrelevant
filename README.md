@@ -12,6 +12,9 @@ pip install -r requirements.txt
 ```
 
 ## Extract experimental data
+
+Following the Github's large file limitation, the data are distributed in the releases tab.
+
 ```
 tar bz suites.tar.bz2 # generated using testsuitegenerator.py, killmap.py, and pit.py
 tar bz changes.tar.bz2 # generated using patch.py
