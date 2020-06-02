@@ -152,18 +152,18 @@ def _main():
     total = defaultdict(int)
     import multiprocessing
     import pprint
-    with multiprocessing.Pool(3) as pool:
+    with multiprocessing.Pool(4) as pool:
         tasks = []
         for proj_name in d4j.NAMES:
+#         for proj_name in ["Chart"]:
             for item in d4j.iterate_instance(proj_name):
                 tasks.append(pool.apply_async(_run, (proj_name, item)))
 
         for k in tasks:
             t = k.get()
-            if t is not None:
-                t, name, bug_id = t
-                stats[name][t] += 1
-                total[t] += 1
+            t, name, bug_id = t
+            stats[name][t] += 1
+            total[t] += 1
 
     pp = pprint.PrettyPrinter(indent=2)
     pp.pprint(stats)
@@ -190,7 +190,7 @@ def _run(proj_name, item):
                         writer.writerow(row)
             except Exception as e:
                 os.unlink(out_file)
-                raise e
+                return "u", proj_name, bug_id,
 
     for ratio in range(25, 525, 25):
         out_file = os.path.join(out_root, "{}.csv".format(ratio))
@@ -204,7 +204,9 @@ def _run(proj_name, item):
                         writer.writerow(row)
             except Exception as e:
                 os.unlink(out_file)
-                raise e
+                return "u", proj_name, bug_id,
+    
+    return "s", proj_name, bug_id,
 
 
 if __name__ == "__main__":

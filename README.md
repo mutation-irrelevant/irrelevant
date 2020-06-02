@@ -28,3 +28,4 @@ jupyter lab
 
 # TODO
 - generalize and refine script
+- write the manual to execute each script

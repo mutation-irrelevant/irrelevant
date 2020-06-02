@@ -12,8 +12,6 @@ np.seterr(all='raise')
 
 
 class PitParser(sax.handler.ContentHandler):
-
-
     def __init__(self, test_size, method_changes, line_changes):
         self._method_name = None
         self._class_name = None
